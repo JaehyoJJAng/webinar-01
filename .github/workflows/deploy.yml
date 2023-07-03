@@ -23,12 +23,16 @@ jobs:
           token:  ${{ secrets.CLOUDTYPE_TOKEN }} 
           project: webinar01/react-app
           stage: main
-          run: |
-            ls -alh
-            pwd
-          # yaml: |
-          #   name: react
-          #   app: web
-          #   options:
-          #     docbase: /build
+          yaml: |
+            name: react
+            app: web
+            options:
+              docbase: /build
+              nodeversion: 14
+              spa: true
+            context:
+              git:
+                url:  git@github.com:${{ github.repository }}.git 
+                ref:  ${{ github.ref }} 
+              preset: react
 
