@@ -1,23 +1,47 @@
-name: Deploy to cloudtype
+name: Create and Publish a Docker Image, Deploy to CloudType
 on:
   push:
     branches:
       - main
   workflow_dispatch:
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: "1. Checkout"
-        uses: actions/checkout@v2
 
-      - name: "2. Connect deploy key"
-        uses: cloudtype-github-actions/connect@v1
-        with:
-          token:  ${{ secrets.CLOUDTYPE_TOKEN }} 
-          ghtoken:  ${{ secrets.GHP_TOKEN }} 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME:  ${{ github.repository }} 
+
+jobs:
+  build-and-push-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: "1. Checkout repository"
+        uses: actions/checkout@v3
       
-      - name: Deploy
+      - name: "2. Log in to the container registry"
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        with:
+          registry:  ${{ env.REGISTRY }}  
+          username:  ${{ secrets.GHP_TOKEN }} 
+      
+      - name: "3. Extract metadata (tags,labels) for docker"
+        id: meta
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images:  ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} 
+          tags: |
+            type=sha
+      
+      - name: "4. Build and push docker image"
+        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
+        with:
+          context: ./
+          push: true
+          tags:  ${{ steps.meta.outputs.tags }} 
+          labels:  ${{ steps.meta.outputs.labels }} 
+      
+      - name: "5. Deploy to CloudType"
         uses: cloudtype-github-actions/deploy@v1
         with:
           token:  ${{ secrets.CLOUDTYPE_TOKEN }} 
@@ -25,14 +49,8 @@ jobs:
           stage: main
           yaml: |
             name: react
-            app: web
+            app: container
             options:
-              docbase: /build
-              nodeversion: 14
-              spa: true
-            context:
-              git:
-                url:  git@github.com:${{ github.repository }}.git 
-                ref:  ${{ github.ref }} 
-              preset: react
+              ports: 8080
+              image:  ${{ steps.meta.outputs.tags }} 
 
