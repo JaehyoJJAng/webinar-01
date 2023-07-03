@@ -8,7 +8,7 @@
 <br/>
 <br/>
 
-GitHub Actions를 활용한 CI/CD 파이프라인 구축하기 <!-- omit in toc -->
+# GitHub Actions를 활용한 CI/CD 파이프라인 구축하기 <!-- omit in toc -->
 
 ## 목차 <!-- omit in toc -->
 - [🛠️ 준비사항](#️-준비사항)
