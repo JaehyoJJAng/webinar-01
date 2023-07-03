@@ -7,16 +7,13 @@ on:
 
 env:
   REGISTRY: yshrim12
-  IMAGE_NAME:  ${{ github.repository }} 
+  IMAGE_NAME: react
   DOCKER_USERNAME:  ${{ secrets.DOCKER_USERNAME }} 
   DOCKER_PASSWORD:  ${{ secrets.DOCKER_PASSWORD }} 
 
 jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
     steps:
       - name: "1. Checkout repository"
         uses: actions/checkout@v3
@@ -53,4 +50,3 @@ jobs:
             options:
               ports: 8080
               image:  ${{ steps.meta.outputs.tags }} 
-
