@@ -8,6 +8,8 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME:  ${{ github.repository }} 
+  DOCKER_USERNAME:  ${{ secrets.DOCKER_USERNAME }} 
+  DOCKER_PASSWORD:  ${{ secrets.DOCKER_PASSWORD }} 
 
 jobs:
   build-and-push-image:
@@ -19,13 +21,12 @@ jobs:
       - name: "1. Checkout repository"
         uses: actions/checkout@v3
       
-      - name: "2. Log in to the container registry"
-        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+      - name: "2. Log in to the Docker hub"
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
         with:
-          registry:  ${{ env.REGISTRY }}  
-          username:  ${{ github.actor }} 
-          password:  ${{ secrets.GHP_TOKEN }} 
-      
+          username:  ${{ env.DOCKER_USERNAME }} 
+          password:  ${{ env.DOCKER_PASSWORD }} 
+
       - name: "3. Extract metadata (tags,labels) for docker"
         id: meta
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
