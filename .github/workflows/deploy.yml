@@ -14,13 +14,13 @@ jobs:
       - name: "2. Connect deploy key"
         uses: cloudtype-github-actions/connect@v1
         with:
-          token: {% raw %} ${{ secrets.CLOUDTYPE_TOKEN }} {% endraw %}
-          ghtoken: {% raw %} ${{ secrets.GHP_TOKEN }} {% endraw %}
+          token:  ${{ secrets.CLOUDTYPE_TOKEN }} 
+          ghtoken:  ${{ secrets.GHP_TOKEN }} 
       
       - name: Deploy
         uses: cloudtype-github-actions/deploy@v1
         with:
-          token: {% raw %} ${{ secrets.CLOUDTYPE_TOKEN }} {% endraw %}
+          token:  ${{ secrets.CLOUDTYPE_TOKEN }} 
           project: webinar01/react-app
           stage: main
           run: |
@@ -31,3 +31,4 @@ jobs:
           #   app: web
           #   options:
           #     docbase: /build
+
