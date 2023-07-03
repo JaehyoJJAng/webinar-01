@@ -21,7 +21,7 @@ jobs:
         uses: cloudtype-github-actions/deploy@v1
         with:
           token:  ${{ secrets.CLOUDTYPE_TOKEN }} 
-          project: webinar01/react-app
+          project: 20911876/react-app
           stage: main
           yaml: |
             name: react
