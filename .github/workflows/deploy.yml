@@ -1,0 +1,33 @@
+name: Deploy to cloudtype
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "1. Checkout"
+        uses: actions/checkout@v2
+
+      - name: "2. Connect deploy key"
+        uses: cloudtype-github-actions/connect@v1
+        with:
+          token: {% raw %} ${{ secrets.CLOUDTYPE_TOKEN }} {% endraw %}
+          ghtoken: {% raw %} ${{ secrets.GHP_TOKEN }} {% endraw %}
+      
+      - name: Deploy
+        uses: cloudtype-github-actions/deploy@v1
+        with:
+          token: {% raw %} ${{ secrets.CLOUDTYPE_TOKEN }} {% endraw %}
+          project: webinar01/react-app
+          stage: main
+          run: |
+            ls -alh
+            pwd
+          # yaml: |
+          #   name: react
+          #   app: web
+          #   options:
+          #     docbase: /build
